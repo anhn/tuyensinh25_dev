@@ -10,7 +10,9 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Set OpenAI API Key in the environment
 os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
-
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
+)
 # Sample FAQ database
 faq_data = [
     {"question": "Quy trình tuyển sinh như thế nào?", "answer": "Quy trình tuyển sinh bao gồm nộp đơn, bảng điểm và đáp ứng các tiêu chí đủ điều kiện."},
@@ -44,7 +46,7 @@ def generate_gpt4_response(question, context):
     )
     
     try:
-        response = openai.ChatCompletion.create(  # FIXED API CALL
+        response = client.chat.completions.create(  # FIXED API CALL
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
