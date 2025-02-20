@@ -42,7 +42,7 @@ def generate_gpt4_response(question, context):
         f"Response:"
     )
     try:
-        response = client.chat.completions.create(
+        response = openai.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
                       {"role": "user", "content": prompt}]
