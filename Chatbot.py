@@ -58,7 +58,7 @@ def generate_gpt4_response(question, context):
         return f"⚠️ Lỗi: {str(e)}"
 
 # Streamlit UI
-st.title("🎓 University Admissions Chatbot")
+st.title("🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT")
 st.write("Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!")
 
 user_input = st.text_input("Nhập câu hỏi của bạn:")
