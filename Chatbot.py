@@ -44,15 +44,16 @@ def generate_gpt4_response(question, context):
         f"Câu trả lời từ FAQ: {context}\n\n"
         f"Phản hồi:"
     )
-    
+    st.write(question)
+    st.write(context)
     try:
         response = openai.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
                       {"role": "user", "content": prompt}]
         )
+        st.write(response)
         return response.choices[0].message.content
-
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
 
