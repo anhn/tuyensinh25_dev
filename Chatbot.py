@@ -34,14 +34,22 @@ def find_best_match(user_query):
 
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
-    prompt = f"User asked: {question}\n\nBased on university information, provide a helpful response:\n\n{context}\n\nAnswer:"
-    response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
-              {"role": "user", "content": prompt}]
+    prompt = (
+        f"You are a helpful university admissions assistant.\n"
+        f"A student asked: {question}\n\n"
+        f"Based on the university information below, provide a helpful, concise, and friendly response:\n\n"
+        f"FAQ Answer: {context}\n\n"
+        f"Response:"
     )
-    final_response = response.choices[0].message.content
-    return final_response
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
+                      {"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"⚠️ Error: {str(e)}"
 
 # Streamlit UI
 st.title("🎓 University Admissions Chatbot")
