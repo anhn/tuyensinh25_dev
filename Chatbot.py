@@ -9,6 +9,7 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # OpenAI API Key (set in the environment)
 openai.api_key = st.secrets["api"]["key"]
+client = openai.OpenAI(api_key=st.secrets["api"]["key"])  # Uses Streamlit secrets
 
 # Sample FAQ database
 faq_data = [
@@ -41,15 +42,17 @@ def generate_gpt4_response(question, context):
         f"FAQ Answer: {context}\n\n"
         f"Response:"
     )
-    #try:
-    response = openai.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
-                  {"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
-    #except Exception as e:
-    #    return f"⚠️ Error: {str(e)}"
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful university admissions assistant."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"⚠️ Error: {str(e)}"
 
 # Streamlit UI
 st.title("🎓 University Admissions Chatbot")
