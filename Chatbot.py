@@ -9,7 +9,8 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # OpenAI API Key (set in the environment)
 #openai.api_key = st.secrets["api"]["key"]
-client = OpenAI(api_key = st.secrets["api"]["key"])
+os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
+client = OpenAI()
 
 # Sample FAQ database
 faq_data = [
