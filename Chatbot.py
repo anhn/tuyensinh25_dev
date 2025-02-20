@@ -36,11 +36,12 @@ def find_best_match(user_query):
 def generate_gpt4_response(question, context):
     prompt = f"User asked: {question}\n\nBased on university information, provide a helpful response:\n\n{context}\n\nAnswer:"
     response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
-                  {"role": "user", "content": prompt}]
+    model="gpt-4",
+    messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
+              {"role": "user", "content": prompt}]
     )
-    return response["choices"][0]["message"]["content"]
+    final_response = response.choices[0].message.content
+    return final_response
 
 # Streamlit UI
 st.title("🎓 University Admissions Chatbot")
