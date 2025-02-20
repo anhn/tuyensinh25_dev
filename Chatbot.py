@@ -8,10 +8,8 @@ from sentence_transformers import SentenceTransformer, util
 # Load SBERT model
 sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# OpenAI API Key (set in the environment)
-openai.api_key = st.secrets["api"]["key"]
-#os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
-#client = OpenAI()
+# Set OpenAI API Key in the environment
+os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
 
 # Sample FAQ database
 faq_data = [
@@ -44,31 +42,32 @@ def generate_gpt4_response(question, context):
         f"Câu trả lời từ FAQ: {context}\n\n"
         f"Phản hồi:"
     )
-    response = openai.chat.completions.create(
+    
+    try:
+        response = openai.ChatCompletion.create(  # FIXED API CALL
             model="gpt-4",
-            messages=[{"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
-                      {"role": "user", "content": prompt}]
-    )
-    st.write(messages)
-    st.write(response)
-    return response.choices[0].message.content
+            messages=[
+                {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response["choices"][0]["message"]["content"]
+    except Exception as e:
+        return f"⚠️ Lỗi: {str(e)}"
 
 # Streamlit UI
 st.title("🎓 University Admissions Chatbot")
-st.write("Ask me anything about university admissions!")
+st.write("Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!")
 
-user_input = st.text_input("Type your question here:")
+user_input = st.text_input("Nhập câu hỏi của bạn:")
 
 if user_input:
-    # Find best FAQ match
     best_match = find_best_match(user_input)
-    
-    # Generate GPT-4 response
     final_response = generate_gpt4_response(user_input, best_match["answer"])
 
-    st.subheader("🤖 Chatbot Response")
+    st.subheader("🤖 Phản hồi từ chatbot")
     st.write(final_response)
     
-    st.subheader("📌 Matched FAQ")
+    st.subheader("📌 Câu hỏi khớp FAQ")
     st.write(f"**Q:** {best_match['question']}")
     st.write(f"**A:** {best_match['answer']}")
