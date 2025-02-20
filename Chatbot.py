@@ -15,10 +15,10 @@ openai.api_key = st.secrets["api"]["key"]
 
 # Sample FAQ database
 faq_data = [
-    {"question": "What is the admission process?", "answer": "The admission process includes submitting an application, transcripts, and meeting the eligibility criteria."},
-    {"question": "What are the tuition fees?", "answer": "Tuition fees vary by program. Visit our tuition fee page for details."},
-    {"question": "How do I apply for a scholarship?", "answer": "Scholarships are available for qualified students. Check our scholarship page for eligibility."},
-    {"question": "What is the deadline for applications?", "answer": "Application deadlines vary by program and intake. Please check the admissions page for exact dates."}
+    {"question": "Quy trình tuyển sinh như thế nào?", "answer": "Quy trình tuyển sinh bao gồm nộp đơn, bảng điểm và đáp ứng các tiêu chí đủ điều kiện."},
+    {"question": "Học phí là bao nhiêu?", "answer": "Học phí khác nhau tùy theo chương trình. Vui lòng truy cập trang học phí của chúng tôi để biết chi tiết."},
+    {"question": "Làm thế nào để tôi đăng ký học bổng?", "answer": "Học bổng có sẵn cho những sinh viên đủ điều kiện. Hãy kiểm tra trang học bổng của chúng tôi để biết thông tin chi tiết."},
+    {"question": "Thời hạn nộp đơn là khi nào?", "answer": "Thời hạn nộp đơn khác nhau tùy theo chương trình và đợt tuyển sinh. Vui lòng kiểm tra trang tuyển sinh để biết ngày cụ thể."}
 ]
 
 # Convert FAQ questions to embeddings
@@ -38,20 +38,21 @@ def find_best_match(user_query):
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
     prompt = (
-        f"You are a helpful university admissions assistant.\n"
-        f"A student asked: {question}\n\n"
-        f"Based on the university information below, provide a helpful, concise, and friendly response:\n\n"
-        f"FAQ Answer: {context}\n\n"
-        f"Response:"
+        f"Bạn là một trợ lý tuyển sinh đại học hữu ích.\n"
+        f"Một sinh viên hỏi: {question}\n\n"
+        f"Dựa trên thông tin của trường đại học dưới đây, hãy cung cấp một câu trả lời hữu ích, ngắn gọn và thân thiện:\n\n"
+        f"Câu trả lời từ FAQ: {context}\n\n"
+        f"Phản hồi:"
     )
     
     try:
         response = openai.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
+            messages=[{"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
                       {"role": "user", "content": prompt}]
         )
         return response.choices[0].message.content
+
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
 
