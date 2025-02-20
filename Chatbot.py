@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 from openai import OpenAI
 import faiss
 import numpy as np
