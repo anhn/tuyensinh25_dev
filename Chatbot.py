@@ -41,15 +41,15 @@ def generate_gpt4_response(question, context):
         f"FAQ Answer: {context}\n\n"
         f"Response:"
     )
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-4",
-            messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
-                      {"role": "user", "content": prompt}]
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"⚠️ Error: {str(e)}"
+    #try:
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
+                  {"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
+    #except Exception as e:
+    #    return f"⚠️ Error: {str(e)}"
 
 # Streamlit UI
 st.title("🎓 University Admissions Chatbot")
