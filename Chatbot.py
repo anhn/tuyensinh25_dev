@@ -8,7 +8,8 @@ from sentence_transformers import SentenceTransformer, util
 sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # OpenAI API Key (set in the environment)
-openai.api_key = st.secrets["api"]["key"]
+#openai.api_key = st.secrets["api"]["key"]
+client = OpenAI(api_key = st.secrets["api"]["key"])
 
 # Sample FAQ database
 faq_data = [
@@ -43,7 +44,7 @@ def generate_gpt4_response(question, context):
     )
     
     try:
-        response = openai.chat.completions.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "system", "content": "You are a helpful university admissions assistant."},
                       {"role": "user", "content": prompt}]
