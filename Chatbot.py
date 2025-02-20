@@ -53,7 +53,7 @@ def generate_gpt4_response(question, context):
                 {"role": "user", "content": prompt}
             ]
         )
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return f"⚠️ Lỗi: {str(e)}"
 
