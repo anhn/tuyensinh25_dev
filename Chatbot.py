@@ -80,7 +80,7 @@ if user_input:
         use_gpt = True
  
     # Store the interaction in chat log (latest on top)
-    st.session_state["chat_log"].insert(0, f"**Bạn:** {user_input}\n**🤖 Chatbot:** {final_response}")
+    st.session_state["chat_log"].insert(0, f"**Bạn:** {user_input}\n\n**🤖 Chatbot:** {final_response}")
 
     st.subheader("📜 Lịch sử hội thoại")
     st.write("\n\n".join(st.session_state["chat_log"]))
