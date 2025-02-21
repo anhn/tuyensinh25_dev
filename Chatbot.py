@@ -33,16 +33,18 @@ faiss_index.add(faq_embeddings)
 def find_best_match(user_query):
     query_embedding = sbert_model.encode([user_query], convert_to_tensor=True).cpu().numpy()
     _, best_match_idx = faiss_index.search(query_embedding, 1)
-    return faq_data[best_match_idx[0][0]]
+    best_match = faq_data[best_match_idx[0][0]]
+    # Compute similarity
+    best_match_embedding = faq_embeddings[best_match_idx[0][0]]
+    similarity = util.cos_sim(query_embedding, best_match_embedding).item()
+    return best_match, similarity
+    #return faq_data[best_match_idx[0][0]]
 
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
     prompt = (
-        f"Bạn là một trợ lý tuyển sinh đại học hữu ích.\n"
         f"Một sinh viên hỏi: {question}\n\n"
-        f"Dựa trên thông tin của trường đại học dưới đây, hãy cung cấp một câu trả lời hữu ích, ngắn gọn và thân thiện:\n\n"
-        f"Câu trả lời từ FAQ: {context}\n\n"
-        f"Phản hồi:"
+        f"Dựa trên thông tin tìm được trên internett, hãy cung cấp một câu trả lời hữu ích, ngắn gọn và thân thiện. Dẫn nguồn nếu có thể."
     )
     
     try:
@@ -64,12 +66,25 @@ st.write("Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!")
 user_input = st.text_input("Nhập câu hỏi của bạn:")
 
 if user_input:
-    best_match = find_best_match(user_input)
-    final_response = generate_gpt4_response(user_input, best_match["answer"])
+    best_match, similarity = find_best_match(user_input)
+    threshold = 0.7  # Define a similarity threshold
+    if similarity >= threshold:
+        final_response = best_match["answer"]
+        use_gpt = False
+    else:
+        final_response = generate_gpt4_response(user_input, best_match["answer"])
+        use_gpt = True
 
     st.subheader("🤖 Phản hồi từ chatbot")
     st.write(final_response)
-    
+
     st.subheader("📌 Câu hỏi khớp FAQ")
     st.write(f"**Q:** {best_match['question']}")
     st.write(f"**A:** {best_match['answer']}")
+
+    # Show similarity score for debugging purposes (optional)
+    st.write(f"🔍 **Độ tương đồng:** {similarity:.2f}")
+
+    if use_gpt:
+        st.warning("📢 GPT-4 đã được sử dụng vì câu trả lời từ FAQ không đủ chính xác.")
+
