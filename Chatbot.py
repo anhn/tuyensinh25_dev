@@ -8,6 +8,10 @@ from sentence_transformers import SentenceTransformer, util
 # Load SBERT model
 sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
+# Initialize chat history in session state
+if "chat_log" not in st.session_state:
+    st.session_state["chat_log"] = []
+
 # Set OpenAI API Key in the environment
 os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
 client = OpenAI(
@@ -63,7 +67,7 @@ def generate_gpt4_response(question, context):
 st.title("🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT")
 st.write("Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!")
 
-user_input = st.text_input("Nhập câu hỏi của bạn:")
+user_input = st.text_area("Nhập câu hỏi của bạn:", height=20)
 
 if user_input:
     best_match, similarity = find_best_match(user_input)
@@ -74,9 +78,12 @@ if user_input:
     else:
         final_response = generate_gpt4_response(user_input, best_match["answer"])
         use_gpt = True
+ 
+    # Store the interaction in chat log (latest on top)
+    st.session_state["chat_log"].insert(0, f"**Bạn:** {user_input}\n**🤖 Chatbot:** {final_response}")
 
-    st.subheader("🤖 Phản hồi từ chatbot")
-    st.write(final_response)
+    st.subheader("📜 Lịch sử hội thoại")
+    st.write("\n\n".join(st.session_state["chat_log"]))
 
     st.subheader("📌 Câu hỏi khớp FAQ")
     st.write(f"**Q:** {best_match['question']}")
