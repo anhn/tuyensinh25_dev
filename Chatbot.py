@@ -97,7 +97,7 @@ def save_chat_log(user_ip, user_message, bot_response, feedback):
                 "timestamp": datetime.utcnow(),
                 "user_message": user_message,
                 "bot_response": bot_response,
-                "is_good": false,
+                "is_good": False,
                 "problem_detail": feedback
             }    
     else:    
@@ -106,7 +106,7 @@ def save_chat_log(user_ip, user_message, bot_response, feedback):
             "timestamp": datetime.utcnow(),
             "user_message": user_message,
             "bot_response": bot_response,
-            "is_good": true,
+            "is_good": True,
             "problem_detail" : ""
         }
     chatlog_collection.insert_one(chat_entry)
