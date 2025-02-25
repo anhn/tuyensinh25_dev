@@ -118,28 +118,32 @@ BANNER_URL = "https://utt.edu.vn/uploads/images/site/1722045380banner-utt.png"  
 st.markdown(
     f"""
     <style>
+        .header-container {{
+            display: flex;
+            align-items: center;
+            gap: 20px;  /* Adds spacing between image and text */
+            padding: 10px 20px; /* Adjust padding for spacing */
+        }}
         .banner {{
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: auto;
+            width: 100px;  /* Adjust width for a better layout */
             height: auto;
         }}
         .title-container {{
-            margin-left: 120px;  /* Adjusted margin to avoid overlap with banner */
-            padding-top: 10px;
+            flex-grow: 1;  /* Allows the text to take up remaining space */
         }}
         .title {{
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
-            color: #1E88E5; /* Blue for education theme */
+            color: #1E88E5; /* Education-themed blue */
+            margin: 0;
         }}
         .subtitle {{
             font-size: 18px;
             color: #333;
+            margin: 5px 0 0 0;
         }}
     </style>
-    <div>
+    <div class="header-container">
         <img class="banner" src="{BANNER_URL}">
         <div class="title-container">
             <p class="title">🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT</p>
