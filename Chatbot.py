@@ -181,7 +181,7 @@ if user_input:
     #st.write("\n\n".join(st.session_state["chat_log"]))
     for chat in st.session_state["chat_log"]:
         st.markdown(chat, unsafe_allow_html=True)  # Render HTML properly
-    3st.subheader("📌 Câu hỏi khớp FAQ")
+    #st.subheader("📌 Câu hỏi khớp FAQ")
     #st.write(f"**Q:** {best_match['question']}")
     #st.write(f"**A:** {best_match['answer']}")
 
