@@ -50,7 +50,7 @@ def load_faq_data():
         {"question": "Làm thế nào để tôi đăng ký học bổng?", "answer": "Học bổng có sẵn cho những sinh viên đủ điều kiện. Hãy kiểm tra trang học bổng của chúng tôi để biết thông tin chi tiết."},
         {"question": "Thời hạn nộp đơn là khi nào?", "answer": "Thời hạn nộp đơn khác nhau tùy theo chương trình và đợt tuyển sinh. Vui lòng kiểm tra trang tuyển sinh để biết ngày cụ thể."}
     ]
-    return fag_data
+    return faq_data
 # Convert FAQ questions to embeddings
 faq_questions = [item["question"] for item in load_faq_data()]
 faq_embeddings = sbert_model.encode(faq_questions, convert_to_tensor=True).cpu().numpy()
