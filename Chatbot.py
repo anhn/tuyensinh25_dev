@@ -170,7 +170,6 @@ if user_input:
     feedback = streamlit_feedback(
         feedback_type="thumbs",
         optional_text_label="Phản hồi thêm (tùy chọn):",
-        key=chat["id"],  # Unique key per chat
     )
     # Save chat log to MongoDB
     save_chat_log(user_ip, user_input, final_response,feedback)
