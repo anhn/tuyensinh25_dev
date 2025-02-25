@@ -181,12 +181,12 @@ if user_input:
     #st.write("\n\n".join(st.session_state["chat_log"]))
     for chat in st.session_state["chat_log"]:
         st.markdown(chat, unsafe_allow_html=True)  # Render HTML properly
-    st.subheader("📌 Câu hỏi khớp FAQ")
-    st.write(f"**Q:** {best_match['question']}")
-    st.write(f"**A:** {best_match['answer']}")
+    3st.subheader("📌 Câu hỏi khớp FAQ")
+    #st.write(f"**Q:** {best_match['question']}")
+    #st.write(f"**A:** {best_match['answer']}")
 
     # Show similarity score for debugging purposes (optional)
-    st.write(f"🔍 **Độ tương đồng:** {similarity:.2f}")
+    #st.write(f"🔍 **Độ tương đồng:** {similarity:.2f}")
     if use_gpt:
         st.warning("📢 GPT-4 đã được sử dụng vì câu trả lời từ FAQ không đủ chính xác.")
 
