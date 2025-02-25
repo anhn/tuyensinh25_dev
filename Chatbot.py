@@ -162,8 +162,8 @@ if user_input:
  
     # Store the interaction in chat log (latest on top)
     st.session_state["chat_log"].insert(0, 
-        f'<p style="color:#1E88E5;"><strong>Bạn:</strong></p> <p>{user_input}</p>'
-        f'<p style="color:#43A047;"><strong>🤖 Chatbot:</strong></p> <p>{final_response}</p>'
+        f'<p style="color:#1E88E5;"><strong>Bạn:</strong> {user_input}</p>'
+        f'<p style="color:#43A047;"><strong>🤖 Tư vấn viên:</strong> {final_response}</p>'
     )    
     # Feedback widget
     feedback = ""
