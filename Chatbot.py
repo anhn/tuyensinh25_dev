@@ -167,10 +167,10 @@ if user_input:
     )    
     # Feedback widget
     feedback = ""
-    feedback = streamlit_feedback(
-        feedback_type="thumbs",
-        optional_text_label="Phản hồi thêm (tùy chọn):",
-    )
+    #feedback = streamlit_feedback(
+    #    feedback_type="thumbs",
+    #    optional_text_label="Phản hồi thêm (tùy chọn):",
+    #)
     # Save chat log to MongoDB
     save_chat_log(user_ip, user_input, final_response,feedback)
     # Store feedback in session state
