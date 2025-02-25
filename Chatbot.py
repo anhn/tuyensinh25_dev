@@ -63,12 +63,11 @@ faiss_index.add(faq_embeddings)
 def find_best_match(user_query):
     query_embedding = sbert_model.encode([user_query], convert_to_tensor=True).cpu().numpy()
     _, best_match_idx = faiss_index.search(query_embedding, 1)
-    best_match = faq_data[best_match_idx[0][0]]
+    best_match = load_faq_data()[best_match_idx[0][0]]
     # Compute similarity
     best_match_embedding = faq_embeddings[best_match_idx[0][0]]
     similarity = util.cos_sim(query_embedding, best_match_embedding).item()
     return best_match, similarity
-    #return faq_data[best_match_idx[0][0]]
 
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
