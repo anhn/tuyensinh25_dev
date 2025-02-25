@@ -118,22 +118,37 @@ BANNER_URL = "https://utt.edu.vn/uploads/images/site/1722045380banner-utt.png"  
 st.markdown(
     f"""
     <style>
-    .banner {{
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        width: auto;
-        height: auto;
-    }}
+        .banner {{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: auto;
+            height: auto;
+        }}
+        .title-container {{
+            margin-left: 120px;  /* Adjusted margin to avoid overlap with banner */
+            padding-top: 10px;
+        }}
+        .title {{
+            font-size: 32px;
+            font-weight: bold;
+            color: #1E88E5; /* Blue for education theme */
+        }}
+        .subtitle {{
+            font-size: 18px;
+            color: #333;
+        }}
     </style>
-    <img class="banner" src="{BANNER_URL}">
+    <div>
+        <img class="banner" src="{BANNER_URL}">
+        <div class="title-container">
+            <p class="title">🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT</p>
+            <p class="subtitle">Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!</p>
+        </div>
+    </div>
     """,
     unsafe_allow_html=True
 )
-
-# Streamlit UI
-st.title("🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT")
-st.write("Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!")
 
 user_input = st.text_area("Nhập câu hỏi của bạn:", height=20)
 
