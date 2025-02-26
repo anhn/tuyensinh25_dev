@@ -102,9 +102,9 @@ def generate_gpt4_response(question, context):
         #        yield content
         bot_response = ""  # Store full response
         citations = []  # Store citation sources
-        print(message.choices[0])
         for message in response:
             content = message.choices[0].delta.content
+            print(message.choices[0])
             if content:  # Some parts may be None, skip them
                 bot_response += content
             # Extract citations if available
