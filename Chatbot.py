@@ -147,47 +147,46 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+# **Chat Interface**
+st.subheader("💬 Chatbot Tuyển Sinh")
+user_input = st.chat_input("Nhập câu hỏi của bạn...")
 
-user_input = st.text_area("Nhập câu hỏi của bạn:", height=20)
-
+#user_input = st.text_area("Nhập câu hỏi của bạn:", height=20)
 if user_input:
-    best_match, similarity = find_best_match(user_input)
-    threshold = 0.7  # Define a similarity threshold
-    if similarity >= threshold:
-        final_response = best_match["answer"]
-        use_gpt = False
-    else:
-        final_response = generate_gpt4_response(user_input, best_match["answer"])
-        use_gpt = True
- 
-    # Store the interaction in chat log (latest on top)
-    st.session_state["chat_log"].insert(0, 
-        f'<p style="color:#1E88E5;"><strong>Bạn:</strong> {user_input}</p>'
-        f'<p style="color:#43A047;"><strong>🤖 Tư vấn viên:</strong> {final_response}</p>'
-    )    
-    # Feedback widget
-    feedback = ""
-    #feedback = streamlit_feedback(
-    #    feedback_type="thumbs",
-    #    optional_text_label="Phản hồi thêm (tùy chọn):",
-    #)
-    # Save chat log to MongoDB
-    save_chat_log(user_ip, user_input, final_response,feedback)
-    # Store feedback in session state
-    if feedback:
-        chat["feedback"] = feedback
-        st.success("✅ Cảm ơn bạn đã đánh giá!")
-    st.subheader("📜 Lịch sử hội thoại")
-    #st.write("\n\n".join(st.session_state["chat_log"]))
-    for chat in st.session_state["chat_log"]:
-        st.markdown(chat, unsafe_allow_html=True)  # Render HTML properly
-    #st.subheader("📌 Câu hỏi khớp FAQ")
-    #st.write(f"**Q:** {best_match['question']}")
-    #st.write(f"**A:** {best_match['answer']}")
+    # Show user message
+    with st.chat_message("user"):
+        st.write(user_input)
 
-    # Show similarity score for debugging purposes (optional)
-    #st.write(f"🔍 **Độ tương đồng:** {similarity:.2f}")
+    # Find best match in FAQ
+    best_match, similarity = find_best_match(user_input)
+    threshold = 0.7  # Minimum similarity to use FAQ answer
+    use_gpt = similarity < threshold
+
+    # Select response source
     if use_gpt:
-        st.warning("📢 GPT-4 đã được sử dụng vì câu trả lời từ FAQ không đủ chính xác.")
+        response_stream = generate_gpt4_response(user_input, best_match["answer"])
+    else:
+        response_stream = [best_match["answer"]]  # Use FAQ answer
+
+    # Show bot response in real-time
+    with st.chat_message("assistant"):
+        bot_response = st.write_stream(response_stream)
+
+    # Save to session history
+    st.session_state["chat_log"].append(
+        {"user": user_input, "bot": bot_response, "is_gpt": use_gpt}
+    )
+
+    # Save chat log to MongoDB
+    save_chat_log(user_ip, user_input, bot_response)
+
+# **Display Chat History**
+st.subheader("📜 Lịch sử hội thoại")
+for chat in reversed(st.session_state["chat_log"]):
+    with st.chat_message("user"):
+        st.write(chat["user"])
+    with st.chat_message("assistant"):
+        st.write(chat["bot"])
+
 
 
