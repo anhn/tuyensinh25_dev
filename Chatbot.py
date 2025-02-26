@@ -166,7 +166,14 @@ if user_input:
     # Show user message
     with st.chat_message("user"):
         st.write(user_input)
-
+    
+    # Thinking animation
+    with st.chat_message("assistant"):
+        thinking_container = st.empty()
+        for _ in range(3):  # Loop to simulate "thinking..."
+            thinking_container.write("🤖 Chatbot đang suy nghĩ" + "." * (_ + 1))
+            time.sleep(0.5)  # Pause for effect
+    
     # Find best match in FAQ
     best_match, similarity = find_best_match(user_input)
     threshold = 0.7  # Minimum similarity to use FAQ answer
@@ -192,7 +199,7 @@ if user_input:
     )
 
     # Save chat log to MongoDB
-    save_chat_log(user_ip, user_input, bot_response)
+    save_chat_log(user_ip, user_input, bot_response, "")
 
 # **Display Chat History**
 #st.subheader("📜 Lịch sử hội thoại")
