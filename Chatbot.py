@@ -166,7 +166,7 @@ if user_input:
     if use_gpt:
         response_stream = generate_gpt4_response(user_input, best_match["answer"])
     else:
-        response_stream = [best_match["answer"]]  # Use FAQ answer
+        response_stream = (line for line in [best_match["answer"]])
 
     # Show bot response in real-time
     with st.chat_message("assistant"):
