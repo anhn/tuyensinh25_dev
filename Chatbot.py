@@ -169,11 +169,11 @@ if user_input:
         st.write(user_input)
     
     # Thinking animation
-    with st.chat_message("assistant"):
-        thinking_container = st.empty()
-        for _ in range(3):  # Loop to simulate "thinking..."
-            thinking_container.write("🤖 Chatbot đang suy nghĩ" + "." * (_ + 1))
-            time.sleep(0.5)  # Pause for effect
+    #with st.chat_message("assistant"):
+    #    thinking_container = st.empty()
+    #    for _ in range(3):  # Loop to simulate "thinking..."
+    #        thinking_container.write("🤖 Chatbot đang suy nghĩ" + "." * (_ + 1))
+    #        time.sleep(0.5)  # Pause for effect
     
     # Find best match in FAQ
     best_match, similarity = find_best_match(user_input)
