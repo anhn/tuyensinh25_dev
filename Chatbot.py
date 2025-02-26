@@ -102,20 +102,32 @@ def generate_gpt4_response(question, context):
         #        yield content
         bot_response = ""  # Store full response
         citations = []  # Store citation sources
+        citation_map = {}  # Map citation numbers to actual sources
+
         for message in response:
             content = message.choices[0].delta.content
-            print(message.choices[0])
             if content:  # Some parts may be None, skip them
                 bot_response += content
+
             # Extract citations if available
-            if "citations" in message.choices[0].delta:
-                citations.extend(message.choices[0].delta.citations)
-        # Append citations to the response
-        if citations:
-            bot_response += "\n\n🔗 **Nguồn tham khảo:**\n"
-            for citation in citations:
-                bot_response += f"- [{citation['title']}]({citation['url']})\n"
-        yield bot_response  # Stream the response with citations included
+            if hasattr(message.choices[0].delta, "citations"):
+                for i, citation in enumerate(message.choices[0].delta.citations, start=1):
+                    citation_map[f"[{i}]"] = citation  # Store actual sources
+
+        # **Fix: Remove orphaned citation markers like `[7]` if they have no matching source**
+        bot_response_cleaned = bot_response
+        for marker in range(1, 10):  # Check [1] to [9]
+            if f"[{marker}]" in bot_response and f"[{marker}]" not in citation_map:
+                bot_response_cleaned = bot_response_cleaned.replace(f"[{marker}]", "")
+
+        # Append citations at the end if available
+        if citation_map:
+            bot_response_cleaned += "\n\n🔗 **Nguồn tham khảo:**\n"
+            for marker, citation in citation_map.items():
+                bot_response_cleaned += f"{marker} [{citation['title']}]({citation['url']})\n"
+
+        yield bot_response_cleaned  # Stream the response with properly formatted citations
+
 
     except Exception as e:
         return f"⚠️ Lỗi: {str(e)}"
