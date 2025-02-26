@@ -17,7 +17,6 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 # MongoDB Connection
 MONGO_URI = st.secrets["mongo"]["uri"]  # Load MongoDB URI from secrets
 PERPLEXITY_API = st.secrets["perplexity"]["key"]
-
 DB_NAME = "utt_detai25"
 FAQ_COLLECTION = "faqtuyensinh"
 CHATLOG_COLLECTION = "chatlog"
