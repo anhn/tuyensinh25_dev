@@ -82,7 +82,8 @@ def generate_gpt4_response(question, context):
             messages=[
                 {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            stream=True
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -111,6 +112,11 @@ def save_chat_log(user_ip, user_message, bot_response, feedback):
         }
     chatlog_collection.insert_one(chat_entry)
     
+def stream_text(text):
+    """Converts a string into a generator to work with `st.write_stream()`."""
+    for word in text.split():
+        yield word + " "  # Stream words with a space for a natural effect
+        
 # Banner Image (Replace with your actual image URL or file path)
 BANNER_URL = "https://utt.edu.vn/uploads/images/site/1722045380banner-utt.png"  # Example banner image
 
@@ -166,7 +172,7 @@ if user_input:
     if use_gpt:
         response_stream = generate_gpt4_response(user_input, best_match["answer"])
     else:
-        response_stream = (line for line in [best_match["answer"]])
+        response_stream = stream_text(best_match["answer"])  # Convert FAQ answer to a generator
 
     # Show bot response in real-time
     with st.chat_message("assistant"):
