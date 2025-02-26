@@ -16,6 +16,8 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # MongoDB Connection
 MONGO_URI = st.secrets["mongo"]["uri"]  # Load MongoDB URI from secrets
+PERFLEXITY_API = st.secrets["perflexity"]["key"]
+
 DB_NAME = "utt_detai25"
 FAQ_COLLECTION = "faqtuyensinh"
 CHATLOG_COLLECTION = "chatlog"
@@ -39,9 +41,10 @@ if "chat_log" not in st.session_state:
 
 # Set OpenAI API Key in the environment
 os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
-client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
-)
+
+#client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+client = OpenAI(api_key=PERFLEXITY_API, base_url="https://api.perplexity.ai")
+
 
 def load_faq_data():
     # Sample FAQ database
@@ -75,12 +78,19 @@ def generate_gpt4_response(question, context):
     prompt = (
         f"Một sinh viên hỏi: {question}\n\n"
         f"Dựa trên thông tin tìm được trên internett, hãy cung cấp một câu trả lời hữu ích, ngắn gọn và thân thiện. Dẫn nguồn nếu có thể."
-    )
-    
+    )   
     try:
-        response = client.chat.completions.create(  # FIXED API CALL
-            model="gpt-4",
-            messages=[
+        #response = client.chat.completions.create(  # FIXED API CALL
+        #    model="gpt-4",
+        #    messages=[
+        #        {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
+        #        {"role": "user", "content": prompt}
+        #    ],
+        #    stream=True
+        #)
+        response = client.chat.completions.create(
+        model="sonar-pro",
+        messages=[
                 {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
                 {"role": "user", "content": prompt}
             ],
