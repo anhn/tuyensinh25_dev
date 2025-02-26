@@ -93,7 +93,8 @@ def generate_gpt4_response(question, context):
                 {"role": "system", "content": "Bạn là một trợ lý tuyển sinh đại học hữu ích."},
                 {"role": "user", "content": prompt}
             ],
-            stream=True
+            stream=True,
+            max_tokens=350  # Limit response length to ~250 words
         )
         #return response.choices[0].message.content
         #for message in response:
