@@ -16,7 +16,7 @@ sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # MongoDB Connection
 MONGO_URI = st.secrets["mongo"]["uri"]  # Load MongoDB URI from secrets
-PERFLEXITY_API = st.secrets["perflexity"]["key"]
+PERPLEXITY_API = st.secrets["perplexity"]["key"]
 
 DB_NAME = "utt_detai25"
 FAQ_COLLECTION = "faqtuyensinh"
@@ -43,7 +43,7 @@ if "chat_log" not in st.session_state:
 os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
 
 #client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-client = OpenAI(api_key=PERFLEXITY_API, base_url="https://api.perplexity.ai")
+client = OpenAI(api_key=PERPLEXITY_API, base_url="https://api.perplexity.ai")
 
 
 def load_faq_data():
