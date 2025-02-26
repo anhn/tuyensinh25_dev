@@ -171,7 +171,7 @@ st.markdown(
 st.subheader("💬 Chatbot Tuyển Sinh")
 
 # **Display Chat History**
-for chat in (st.session_state["chat_log"]:
+for chat in st.session_state["chat_log"]:
     with st.chat_message("user"):
         st.write(chat["user"])
     with st.chat_message("assistant"):
