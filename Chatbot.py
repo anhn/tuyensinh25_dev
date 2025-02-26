@@ -213,11 +213,11 @@ if user_input:
 
 # **Display Chat History**
 #st.subheader("📜 Lịch sử hội thoại")
-#for chat in reversed(st.session_state["chat_log"]):
-#    with st.chat_message("user"):
-#        st.write(chat["user"])
-#    with st.chat_message("assistant"):
-#        st.write(chat["bot"])
+for chat in reversed(st.session_state["chat_log"][:-1]):
+    with st.chat_message("user"):
+        st.write(chat["user"])
+    with st.chat_message("assistant"):
+        st.write(chat["bot"])
 
 
 
