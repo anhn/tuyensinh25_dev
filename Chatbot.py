@@ -169,9 +169,16 @@ st.markdown(
 )
 # **Chat Interface**
 st.subheader("💬 Chatbot Tuyển Sinh")
+
+# **Display Chat History**
+for chat in (st.session_state["chat_log"]:
+    with st.chat_message("user"):
+        st.write(chat["user"])
+    with st.chat_message("assistant"):
+        st.write(chat["bot"])
+        
 user_input = st.chat_input("Nhập câu hỏi của bạn...")
 
-#user_input = st.text_area("Nhập câu hỏi của bạn:", height=20)
 if user_input:
     # Show user message
     with st.chat_message("user"):
@@ -211,12 +218,7 @@ if user_input:
     # Save chat log to MongoDB
     save_chat_log(user_ip, user_input, bot_response, "")
 
-# **Display Chat History**
-for chat in reversed(st.session_state["chat_log"][:-1]):
-    with st.chat_message("user"):
-        st.write(chat["user"])
-    with st.chat_message("assistant"):
-        st.write(chat["bot"])
+
 
 
 
