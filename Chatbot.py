@@ -96,10 +96,26 @@ def generate_gpt4_response(question, context):
             stream=True
         )
         #return response.choices[0].message.content
+        #for message in response:
+        #    content = message.choices[0].delta.content
+        #    if content:  # Some parts may be None, skip them
+        #        yield content
+                bot_response = ""  # Store full response
+        citations = []  # Store citation sources
         for message in response:
             content = message.choices[0].delta.content
             if content:  # Some parts may be None, skip them
-                yield content
+                bot_response += content
+            # Extract citations if available
+            if "citations" in message.choices[0].delta:
+                citations.extend(message.choices[0].delta.citations)
+        # Append citations to the response
+        if citations:
+            bot_response += "\n\n🔗 **Nguồn tham khảo:**\n"
+            for citation in citations:
+                bot_response += f"- [{citation['title']}]({citation['url']})\n"
+        yield bot_response  # Stream the response with citations included
+
     except Exception as e:
         return f"⚠️ Lỗi: {str(e)}"
 
