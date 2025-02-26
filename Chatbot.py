@@ -85,7 +85,11 @@ def generate_gpt4_response(question, context):
             ],
             stream=True
         )
-        return response.choices[0].message.content
+        #return response.choices[0].message.content
+        for message in response:
+            content = message.choices[0].delta.content
+            if content:  # Some parts may be None, skip them
+                yield content
     except Exception as e:
         return f"⚠️ Lỗi: {str(e)}"
 
@@ -170,13 +174,17 @@ if user_input:
 
     # Select response source
     if use_gpt:
-        response_stream = generate_gpt4_response(user_input, best_match["answer"])
+        response_stream = generate_gpt4_response(user_input, best_match["answer"])  # Now a generator
     else:
-        response_stream = stream_text(best_match["answer"])  # Convert FAQ answer to a generator
+        response_stream = stream_text(best_match["answer"])  # FAQ converted to a generator
 
     # Show bot response in real-time
     with st.chat_message("assistant"):
-        bot_response = st.write_stream(response_stream)
+        bot_response_container = st.empty()  # Create an empty container
+        bot_response = ""  # Collect the full response
+        for chunk in response_stream:
+            bot_response += chunk  # Append streamed content
+            bot_response_container.write(bot_response)  # Update UI in real-time
 
     # Save to session history
     st.session_state["chat_log"].append(
@@ -187,7 +195,7 @@ if user_input:
     save_chat_log(user_ip, user_input, bot_response)
 
 # **Display Chat History**
-st.subheader("📜 Lịch sử hội thoại")
+#st.subheader("📜 Lịch sử hội thoại")
 for chat in reversed(st.session_state["chat_log"]):
     with st.chat_message("user"):
         st.write(chat["user"])
