@@ -212,15 +212,11 @@ if user_input:
     save_chat_log(user_ip, user_input, bot_response, "")
 
 # **Display Chat History**
-#st.subheader("📜 Lịch sử hội thoại")
-chat_container = st.empty()  # Create a container for scrolling behavior
-#for chat in reversed(st.session_state["chat_log"][:-1]):
-with chat_container.container():
-    for chat in st.session_state["chat_log"]:
-        with st.chat_message("user"):
-            st.write(chat["user"])
-        with st.chat_message("assistant"):
-            st.write(chat["bot"])
+for chat in reversed(st.session_state["chat_log"][:-1]):
+    with st.chat_message("user"):
+        st.write(chat["user"])
+    with st.chat_message("assistant"):
+        st.write(chat["bot"])
 
 
 
