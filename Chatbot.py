@@ -232,7 +232,7 @@ if user_input:
     feedback=""
     feedback = streamlit_feedback(
         feedback_type="thumbs",
-        optional_text_label="[Optional] Please provide an explanation",
+        optional_text_label="[Tùy chọn] Vui lòng giải thích",
         key=f"feedback_{len(st.session_state["chat_log"])}",
     )
     # Save chat log to MongoDB
