@@ -229,14 +229,25 @@ if user_input:
     st.session_state["chat_log"].append(
         {"user": user_input, "bot": bot_response, "is_gpt": use_gpt}
     )
+    # Save chat log to MongoDB
+    save_chat_log(user_ip, user_input, bot_response, feedback)
     feedback=""
     feedback = streamlit_feedback(
         feedback_type="thumbs",
         optional_text_label="[Tùy chọn] Vui lòng giải thích",
         key=f"feedback_{len(st.session_state["chat_log"])}",
     )
-    # Save chat log to MongoDB
-    save_chat_log(user_ip, user_input, bot_response, feedback)
+    if feedback:
+        st.session_state[feedback_key] = feedback  # Store in session
+    
+        # Update chat log in MongoDB to include feedback
+        chatlog_collection.update_one(
+            {"user_ip": user_ip, "timestamp": chat_entry["timestamp"]},  # Find the saved entry
+            {"$set": {"is_good": False if feedback else True, "problem_detail": feedback}}
+        )
+    
+        st.success("✅ Cảm ơn bạn đã đánh giá!")
+
 
 
 
