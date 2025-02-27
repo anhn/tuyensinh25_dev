@@ -235,11 +235,9 @@ if user_input:
     feedback = streamlit_feedback(
         feedback_type="thumbs",
         optional_text_label="[Tùy chọn] Vui lòng giải thích",
-        key=f"feedback_{len(st.session_state["chat_log"])}",
     )
-    if feedback:
-        st.session_state[feedback_key] = feedback  # Store in session
-    
+    print(feedback)
+    if feedback: 
         # Update chat log in MongoDB to include feedback
         chatlog_collection.update_one(
             {"user_ip": user_ip, "timestamp": chat_entry["timestamp"]},  # Find the saved entry
