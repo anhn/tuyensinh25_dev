@@ -11,7 +11,5 @@ sentence-transformers
 streamlit_feedback
 pymongo
 datetime
-sklearn
 pandas
-aif360
-tensorflow
+
