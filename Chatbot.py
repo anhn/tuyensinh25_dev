@@ -96,40 +96,32 @@ def generate_gpt4_response(question, context):
             stream=True,
             max_tokens=3500  # Limit response length to ~250 words
         )
-        #return response.choices[0].message.content
-        #for message in response:
-        #    content = message.choices[0].delta.content
-        #    if content:  # Some parts may be None, skip them
-        #        yield content
-        bot_response = ""  # Store full response
-        citations = []  # Store citation sources
-        citation_map = {}  # Map citation numbers to actual sources
-
         for message in response:
             content = message.choices[0].delta.content
             if content:  # Some parts may be None, skip them
-                bot_response += content
-
-            # Extract citations if available
-            if hasattr(message.choices[0].delta, "citations"):
-                for i, citation in enumerate(message.choices[0].delta.citations, start=1):
-                    citation_map[f"[{i}]"] = citation  # Store actual sources
-
+                yield content
+        #bot_response = ""  # Store full response
+        #citations = []  # Store citation sources
+        #citation_map = {}  # Map citation numbers to actual sources
+        #for message in response:
+        #    content = message.choices[0].delta.content
+        #    if content:  # Some parts may be None, skip them
+        #        bot_response += content
+        #    # Extract citations if available
+        #    if hasattr(message.choices[0].delta, "citations"):
+        #        for i, citation in enumerate(message.choices[0].delta.citations, start=1):
+        #            citation_map[f"[{i}]"] = citation  # Store actual sources
         # **Fix: Remove orphaned citation markers like `[7]` if they have no matching source**
-        bot_response_cleaned = bot_response
-        for marker in range(1, 10):  # Check [1] to [9]
-            if f"[{marker}]" in bot_response and f"[{marker}]" not in citation_map:
-                bot_response_cleaned = bot_response_cleaned.replace(f"[{marker}]", "")
-
+        #bot_response_cleaned = bot_response
+        #for marker in range(1, 10):  # Check [1] to [9]
+        #    if f"[{marker}]" in bot_response and f"[{marker}]" not in citation_map:
+        #        bot_response_cleaned = bot_response_cleaned.replace(f"[{marker}]", "")
         # Append citations at the end if available
-        if citation_map:
-            bot_response_cleaned += "\n\n🔗 **Nguồn tham khảo:**\n"
-            for marker, citation in citation_map.items():
-                bot_response_cleaned += f"{marker} [{citation['title']}]({citation['url']})\n"
-
-        yield bot_response_cleaned  # Stream the response with properly formatted citations
-
-
+        #if citation_map:
+        #    bot_response_cleaned += "\n\n🔗 **Nguồn tham khảo:**\n"
+        #    for marker, citation in citation_map.items():
+        #        bot_response_cleaned += f"{marker} [{citation['title']}]({citation['url']})\n"
+        #yield bot_response_cleaned  # Stream the response with properly formatted citations
     except Exception as e:
         return f"⚠️ Lỗi: {str(e)}"
 
@@ -213,14 +205,7 @@ if user_input:
     # Show user message
     with st.chat_message("user"):
         st.write(user_input)
-    
-    # Thinking animation
-    #with st.chat_message("assistant"):
-    #    thinking_container = st.empty()
-    #    for _ in range(3):  # Loop to simulate "thinking..."
-    #        thinking_container.write("🤖 Chatbot đang suy nghĩ" + "." * (_ + 1))
-    #        time.sleep(0.5)  # Pause for effect
-    
+
     # Find best match in FAQ
     best_match, similarity = find_best_match(user_input)
     threshold = 0.7  # Minimum similarity to use FAQ answer
@@ -244,9 +229,14 @@ if user_input:
     st.session_state["chat_log"].append(
         {"user": user_input, "bot": bot_response, "is_gpt": use_gpt}
     )
-
+    feedback=""
+    feedback = streamlit_feedback(
+        feedback_type="thumbs",
+        optional_text_label="[Optional] Please provide an explanation",
+        key=f"feedback_{len(st.session_state["chat_log"])}",
+    )
     # Save chat log to MongoDB
-    save_chat_log(user_ip, user_input, bot_response, "")
+    save_chat_log(user_ip, user_input, bot_response, feedback)
 
 
 
