@@ -44,7 +44,7 @@ if prompt := st.chat_input(placeholder="Tell me a joke about sharks"):
 if st.session_state["response"]:
     feedback = streamlit_feedback(
         feedback_type="thumbs",
-        optional_text_label="[Optional] Please provide an explanation",
+        optional_text_label="[Tuỳ chọn] Vui lòng giải thích",
         key=f"feedback_{len(messages)}",
     )
     # This app is logging feedback to Trubrics backend, but you can send it anywhere.
