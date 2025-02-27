@@ -94,7 +94,7 @@ def generate_gpt4_response(question, context):
                 {"role": "user", "content": prompt}
             ],
             stream=True,
-            max_tokens=350  # Limit response length to ~250 words
+            max_tokens=3500  # Limit response length to ~250 words
         )
         #return response.choices[0].message.content
         #for message in response:
