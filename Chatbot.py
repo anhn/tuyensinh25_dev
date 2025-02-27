@@ -229,9 +229,9 @@ if user_input:
     st.session_state["chat_log"].append(
         {"user": user_input, "bot": bot_response, "is_gpt": use_gpt}
     )
+    feedback=""
     # Save chat log to MongoDB
     save_chat_log(user_ip, user_input, bot_response, feedback)
-    feedback=""
     feedback = streamlit_feedback(
         feedback_type="thumbs",
         optional_text_label="[Tùy chọn] Vui lòng giải thích",
