@@ -183,7 +183,7 @@ st.markdown(
 
     <div class="center">
         <img class="banner" src="{BANNER_URL}">
-        <p class="title">🎓 Hỗ trợ tư vấn tuyển sinh - ĐHCNGTVT</p>
+        <p class="title">🎓 Hỗ trợ tư vấn tuyển sinh - UTT</p>
         <p class="subtitle">Hỏi tôi bất kỳ điều gì về tuyển sinh đại học!</p>
     </div>
     """,
