@@ -60,11 +60,9 @@ faiss_index.add(faq_embeddings)
 
 # Function to find best match using SBERT
 def find_best_match(user_query):
-    st.write(user_query)
     query_embedding = sbert_model.encode([user_query], convert_to_tensor=True).cpu().numpy()
     _, best_match_idx = faiss_index.search(query_embedding, 1)
     best_match = load_faq_data()[best_match_idx[0][0]]
-    st.write(best_match)
     # Compute similarity
     best_match_embedding = faq_embeddings[best_match_idx[0][0]]
     similarity = util.cos_sim(query_embedding, best_match_embedding).item()
