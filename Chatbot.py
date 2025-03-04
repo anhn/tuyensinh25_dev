@@ -51,7 +51,7 @@ def load_faq_data():
     return faq_data
 # Convert FAQ questions to embeddings
 
-faq_questions = [item["question"] for item in load_faq_data()]
+faq_questions = [item["Question"] for item in load_faq_data()]
 faq_embeddings = sbert_model.encode(faq_questions, convert_to_tensor=True).cpu().numpy()
 
 # Build FAISS index
@@ -211,9 +211,9 @@ if user_input:
 
     # Select response source
     if use_gpt:
-        response_stream = generate_gpt4_response(user_input, best_match["answer"])  # Now a generator
+        response_stream = generate_gpt4_response(user_input, best_match["Answer"])  # Now a generator
     else:
-        response_stream = stream_text(best_match["answer"])  # FAQ converted to a generator
+        response_stream = stream_text(best_match["Answer"])  # FAQ converted to a generator
 
     # Show bot response in real-time
     with st.chat_message("assistant"):
