@@ -50,6 +50,7 @@ def load_faq_data():
     faq_data = list(faq_collection.find({}, {"_id": 0}))
     return faq_data
 # Convert FAQ questions to embeddings
+
 faq_questions = [item["question"] for item in load_faq_data()]
 faq_embeddings = sbert_model.encode(faq_questions, convert_to_tensor=True).cpu().numpy()
 
@@ -59,9 +60,11 @@ faiss_index.add(faq_embeddings)
 
 # Function to find best match using SBERT
 def find_best_match(user_query):
+    st.write(user_query)
     query_embedding = sbert_model.encode([user_query], convert_to_tensor=True).cpu().numpy()
     _, best_match_idx = faiss_index.search(query_embedding, 1)
     best_match = load_faq_data()[best_match_idx[0][0]]
+    st.write(best_match)
     # Compute similarity
     best_match_embedding = faq_embeddings[best_match_idx[0][0]]
     similarity = util.cos_sim(query_embedding, best_match_embedding).item()
