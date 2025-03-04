@@ -205,7 +205,11 @@ if user_input:
     # Find best match in FAQ
     best_match, similarity = find_best_match(user_input)
     threshold = 0.7  # Minimum similarity to use FAQ answer
-    use_gpt = similarity < threshold or not best_match.get("Answer") or best_match["Answer"].strip().lower() in [""]
+    # Extract and sanitize the answer field
+    best_answer = best_match.get("Answer", "")
+    if not isinstance(best_answer, str):
+        best_answer = str(best_answer)  # Convert non-string values to string
+    use_gpt = similarity < threshold or best_answer.strip().lower() in [""]
 
     # Select response source
     if use_gpt:
