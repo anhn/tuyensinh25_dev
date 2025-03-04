@@ -47,12 +47,7 @@ client = OpenAI(api_key=PERPLEXITY_API, base_url="https://api.perplexity.ai")
 
 def load_faq_data():
     # Sample FAQ database
-    faq_data = [
-        {"question": "Quy trình tuyển sinh như thế nào?", "answer": "Quy trình tuyển sinh bao gồm nộp đơn, bảng điểm và đáp ứng các tiêu chí đủ điều kiện."},
-        {"question": "Học phí là bao nhiêu?", "answer": "Học phí khác nhau tùy theo chương trình. Vui lòng truy cập trang học phí của chúng tôi để biết chi tiết."},
-        {"question": "Làm thế nào để tôi đăng ký học bổng?", "answer": "Học bổng có sẵn cho những sinh viên đủ điều kiện. Hãy kiểm tra trang học bổng của chúng tôi để biết thông tin chi tiết."},
-        {"question": "Thời hạn nộp đơn là khi nào?", "answer": "Thời hạn nộp đơn khác nhau tùy theo chương trình và đợt tuyển sinh. Vui lòng kiểm tra trang tuyển sinh để biết ngày cụ thể."}
-    ]
+    faq_data = list(faq_collection.find({}, {"_id": 0}))
     return faq_data
 # Convert FAQ questions to embeddings
 faq_questions = [item["question"] for item in load_faq_data()]
