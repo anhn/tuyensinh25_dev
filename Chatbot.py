@@ -10,6 +10,7 @@ from streamlit_feedback import streamlit_feedback
 import requests
 import uuid
 import time
+from docx import Document
 
 # Load SBERT model
 sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -20,6 +21,10 @@ PERPLEXITY_API = st.secrets["perplexity"]["key"]
 DB_NAME = "utt_detai25"
 FAQ_COLLECTION = "faqtuyensinh"
 CHATLOG_COLLECTION = "chatlog"
+
+# Load OpenAI embedding model
+EMBEDDING_MODEL = "text-embedding-ada-002"
+GPT_MODEL = "gpt-4-turbo"
 
 client_mongo = MongoClient(MONGO_URI)
 db = client_mongo[DB_NAME]
@@ -41,7 +46,7 @@ if "chat_log" not in st.session_state:
 # Set OpenAI API Key in the environment
 os.environ["OPENAI_API_KEY"] = st.secrets["api"]["key"]
 
-#client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 client = OpenAI(api_key=PERPLEXITY_API, base_url="https://api.perplexity.ai")
 
 
@@ -68,6 +73,21 @@ def find_best_match(user_query):
     similarity = util.cos_sim(query_embedding, best_match_embedding).item()
     return best_match, similarity
 
+    
+def search_in_document(query, doc_path):
+    if not os.path.exists(doc_path):
+        return None  # File not found
+
+    doc = Document(doc_path)
+    text_data = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
+
+    # Simple keyword search (can be improved with embeddings)
+    matches = [text for text in text_data if query.lower() in text.lower()]
+
+    if matches:
+        return "\n".join(matches[:3])  # Return top 3 relevant matches
+    return None  # No relevant info found
+    
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
     prompt = (
@@ -213,13 +233,19 @@ if user_input:
     best_answer = str(best_answer)  # Convert non-string values to string
     use_gpt = similarity < threshold or best_answer.strip().lower() in [""]
     print(use_gpt)
-
     # Select response source
+    #if use_gpt:
+    #    #response_stream = generate_gpt4_response(user_input, best_match["Answer"])  # Now a generator
+    #else:
+    #    response_stream = stream_text(best_match["Answer"])  # FAQ converted to a generator
     if use_gpt:
-        response_stream = generate_gpt4_response(user_input, best_match["Answer"])  # Now a generator
-    else:
-        response_stream = stream_text(best_match["Answer"])  # FAQ converted to a generator
-
+            document_match = search_in_document(user_input)
+            if document_match:  # If found in document, use that
+                response_stream = stream_text(document_match)
+            else:  # If no match, fall back to GPT-4
+                response_stream = generate_gpt4_response(user_input, best_match.get("Answer", ""))
+        else:
+            response_stream = stream_text(best_answer)  # Use FAQ match
     # Show bot response in real-time
     with st.chat_message("assistant"):
         bot_response_container = st.empty()  # Create an empty container
