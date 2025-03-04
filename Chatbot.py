@@ -207,9 +207,11 @@ if user_input:
     threshold = 0.7  # Minimum similarity to use FAQ answer
     # Extract and sanitize the answer field
     best_answer = best_match.get("Answer", "")
+    print(best_answer)
     if not isinstance(best_answer, str):
         best_answer = str(best_answer)  # Convert non-string values to string
     use_gpt = similarity < threshold or best_answer.strip().lower() in [""]
+    print(use_gpt)
 
     # Select response source
     if use_gpt:
