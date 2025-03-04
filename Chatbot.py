@@ -208,8 +208,9 @@ if user_input:
     # Extract and sanitize the answer field
     best_answer = best_match.get("Answer", "")
     print(best_answer)
-    if not isinstance(best_answer, str):
-        best_answer = str(best_answer)  # Convert non-string values to string
+    if isinstance(best_answer, float) and np.isnan(best_answer):
+        best_answer = ""  # Replace NaN with empty string
+    best_answer = str(best_answer)  # Convert non-string values to string
     use_gpt = similarity < threshold or best_answer.strip().lower() in [""]
     print(use_gpt)
 
