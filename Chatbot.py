@@ -10,7 +10,6 @@ from streamlit_feedback import streamlit_feedback
 import requests
 import uuid
 import time
-from docx import Document
 
 # Load SBERT model
 sbert_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -74,19 +73,17 @@ def find_best_match(user_query):
     return best_match, similarity
 
     
-def search_in_document(query, doc_path):
-    if not os.path.exists(doc_path):
-        return None  # File not found
-
-    doc = Document(doc_path)
-    text_data = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
-
+#def search_in_document(query, doc_path):
+#    if not os.path.exists(doc_path):
+#        return None  # File not found
+#
+#    doc = Document(doc_path)
+#    text_data = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
     # Simple keyword search (can be improved with embeddings)
-    matches = [text for text in text_data if query.lower() in text.lower()]
-
-    if matches:
-        return "\n".join(matches[:3])  # Return top 3 relevant matches
-    return None  # No relevant info found
+#    matches = [text for text in text_data if query.lower() in text.lower()]
+#    if matches:
+#        return "\n".join(matches[:3])  # Return top 3 relevant matches
+#    return None  # No relevant info found
     
 # Function to generate GPT-4 response
 def generate_gpt4_response(question, context):
