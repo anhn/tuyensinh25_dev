@@ -239,11 +239,11 @@ if user_input:
     #else:
     #    response_stream = stream_text(best_match["Answer"])  # FAQ converted to a generator
     if use_gpt:
-            document_match = search_in_document(user_input)
-            if document_match:  # If found in document, use that
-                response_stream = stream_text(document_match)
-            else:  # If no match, fall back to GPT-4
-                response_stream = generate_gpt4_response(user_input, best_match.get("Answer", ""))
+        document_match = search_in_document(user_input)
+        if document_match:  # If found in document, use that
+            response_stream = stream_text(document_match)
+        else:  # If no match, fall back to GPT-4
+            response_stream = generate_gpt4_response(user_input, best_match.get("Answer", ""))
     else:
         response_stream = stream_text(best_answer)  # Use FAQ match
     # Show bot response in real-time
