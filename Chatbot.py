@@ -244,8 +244,8 @@ if user_input:
                 response_stream = stream_text(document_match)
             else:  # If no match, fall back to GPT-4
                 response_stream = generate_gpt4_response(user_input, best_match.get("Answer", ""))
-        else:
-            response_stream = stream_text(best_answer)  # Use FAQ match
+    else:
+        response_stream = stream_text(best_answer)  # Use FAQ match
     # Show bot response in real-time
     with st.chat_message("assistant"):
         bot_response_container = st.empty()  # Create an empty container
